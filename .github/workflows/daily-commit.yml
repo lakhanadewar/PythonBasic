@@ -2,18 +2,22 @@ name: Daily Commit
 
 on:
   schedule:
-    - cron: '0 9 * * *'  # 9 AM UTC daily
+    - cron: '0 9 * * *'  # 9 AM UTC daily (adjust timezone as needed)
   workflow_dispatch:  # Allow manual trigger
+  push:  # Also run on push for testing
 
 jobs:
   daily-commit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to push changes
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
           
       - name: Configure Git
         run: |
@@ -51,9 +55,9 @@ jobs:
         if: steps.verify-changed-files.outputs.changed == 'true'
         run: |
           DATE=$(date +%Y-%m-%d)
-          git add .
-          git commit -m "Daily automated commit - $DATE"
-          git push
+          git add -A
+          git commit -m "🤖 Daily automated commit - $DATE" || exit 0
+          git push origin ${{ github.ref_name }} || git push origin main
           
       - name: No changes to commit
         if: steps.verify-changed-files.outputs.changed == 'false'
