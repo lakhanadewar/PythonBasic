@@ -1,16 +1,60 @@
 name: Daily Commit
+
 on:
   schedule:
-    - cron: '0 9 * * *'  # 9 AM daily
+    - cron: '0 9 * * *'  # 9 AM UTC daily
+  workflow_dispatch:  # Allow manual trigger
+
 jobs:
-  commit:
+  daily-commit:
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v2
-      - run: echo "$(date): Daily update" >> daily_log.md
-      - run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Configure Git
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+      - name: Create daily content
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          DATETIME=$(date '+%A, %B %d, %Y at %H:%M UTC')
+          
+          # Create or append to daily log
+          cat >> daily_log.md << EOF
+          
+          ## $DATE - Daily Update
+          
+          - **Date**: $DATETIME
+          - **Activity**: Automated daily maintenance
+          - **Status**: Repository updated via GitHub Actions
+          - **Commit**: Daily progress tracking
+          
+          ---
+          EOF
+          
+      - name: Check for changes
+        id: verify-changed-files
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Commit and push changes
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        run: |
+          DATE=$(date +%Y-%m-%d)
           git add .
-          git commit -m "Daily automated commit - $(date +%Y-%m-%d)"
+          git commit -m "Daily automated commit - $DATE"
           git push
+          
+      - name: No changes to commit
+        if: steps.verify-changed-files.outputs.changed == 'false'
+        run: echo "No changes detected, skipping commit"
