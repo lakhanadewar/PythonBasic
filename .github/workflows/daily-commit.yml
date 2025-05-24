@@ -55,8 +55,9 @@ jobs:
         if: steps.verify-changed-files.outputs.changed == 'true'
         run: |
           DATE=$(date +%Y-%m-%d)
+          TIMESTAMP=$(%H:%M:%S)
           git add -A
-          git commit -m "commit - $DATE" || exit 0
+          git commit -m "commit - $DATE - $TIMESTAMP" || exit 0
           git push origin ${{ github.ref_name }} || git push origin main
           
       - name: No changes to commit

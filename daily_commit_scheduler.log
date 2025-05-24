@@ -1,0 +1,22 @@
+2025-05-23 23:18:53,530 - INFO - Starting daily commit scheduler for C:\Users\lakha\Lakhan Learning\Python Learn\Basics" --time 23:18
+2025-05-23 23:18:53,530 - INFO - Scheduled time: 09:00
+2025-05-23 23:18:53,530 - INFO - Commit script: C:\Users\lakha\Lakhan Learning\Python Learn\Basics\daily_git_commit.py
+2025-05-23 23:18:53,530 - INFO - Running initial commit...
+2025-05-23 23:18:53,530 - INFO - Starting daily commit process...
+2025-05-23 23:18:53,680 - ERROR - Daily commit failed with return code 1
+2025-05-23 23:18:53,680 - ERROR - Error: Traceback (most recent call last):
+  File "C:\Users\lakha\Lakhan Learning\Python Learn\Basics\daily_git_commit.py", line 261, in <module>
+    main()
+  File "C:\Users\lakha\Lakhan Learning\Python Learn\Basics\daily_git_commit.py", line 225, in main
+    committer = DailyGitCommitter(args.repo_path, config_file)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lakha\Lakhan Learning\Python Learn\Basics\daily_git_commit.py", line 18, in __init__
+    self.load_config()
+  File "C:\Users\lakha\Lakhan Learning\Python Learn\Basics\daily_git_commit.py", line 39, in load_config
+    self.save_config()
+  File "C:\Users\lakha\Lakhan Learning\Python Learn\Basics\daily_git_commit.py", line 43, in save_config
+    with open(self.config_file, 'w') as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument: 'C:\\Users\\lakha\\Lakhan Learning\\Python Learn\\Basics" --time 23:18\\commit_config.json'
+
+2025-05-23 23:19:22,695 - INFO - Scheduler stopped by user
